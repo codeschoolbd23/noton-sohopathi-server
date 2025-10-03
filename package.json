@@ -1,0 +1,29 @@
+{
+  "dependencies": {
+    "config": "^4.1.1",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "mongodb": "^6.20.0",
+    "nodemon": "^3.1.10"
+  },
+  "name": "sohopathi-server",
+  "version": "1.0.0",
+  "description": "\"Sohopathi server is created just for student\"",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "\"Code School\"",
+  "license": "ISC",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codeschoolbd23/noton-sohopathi-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/codeschoolbd23/noton-sohopathi-server/issues"
+  },
+  "homepage": "https://github.com/codeschoolbd23/noton-sohopathi-server#readme"
+}
