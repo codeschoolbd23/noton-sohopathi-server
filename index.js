@@ -20,7 +20,6 @@ const client = new MongoClient(uri, {
   useUnifiedTopology: true,
   serverApi: ServerApiVersion.v1,
 });
-
 async function run() {
   try {
     const database = client.db("sohopathi");
@@ -74,17 +73,10 @@ async function run() {
           id: information.id,
           uid: information.uid,
           user: information.user,
-          userEmail: information.userEmail,
-          contact: information.contact,
-          image: information.image,
-          roll: information.roll,
-          registration: information.registration,
-          name: information.name,
-          email: information.email,
-          university: information.university,
-          country: information.country,
+          bookName: information.bookName,
+          version: information.version,
+          viewLink: information.viewLink,         
           author: information.author,
-          journal: information.journal,
           session: information.session,
         },
       };
