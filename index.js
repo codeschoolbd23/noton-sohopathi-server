@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Verify certificate server is running!");
+  res.send("নতুন সহপাঠি সার্ভার চলমান!");
 });
 const password = encodeURIComponent(`${process.env.DB_PASS}`);
 const uri = `mongodb+srv://mubarak:${password}@mubarak-world-all-proje.tmrqr0p.mongodb.net/?retryWrites=true&w=majority&appName=mubarak-world-all-projects`;
