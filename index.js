@@ -11,8 +11,10 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("নতুন সহপাঠি সার্ভার চলমান!");
 });
+
 const password = encodeURIComponent(`${process.env.DB_PASS}`);
-const uri = `mongodb+srv://mubarak:${password}@mubarak-world-all-proje.tmrqr0p.mongodb.net/?retryWrites=true&w=majority&appName=mubarak-world-all-projects`;
+const user = encodeURIComponent(`${process.env.DB_USER}`);
+const uri = `mongodb+srv://${user}:${password}@sohopathicluster.kwnsrvo.mongodb.net/?retryWrites=true&w=majority&appName=SohopathiCluster`;
 const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -21,62 +23,49 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    const database = client.db("verifyCertificate");
-    const certificateCollection = database.collection("DataHouse");
-    const postCollection = database.collection("postData");
+    const database = client.db("sohopathi");
+    const library = database.collection("library");
+    const questionpaper = database.collection("questionpaper");
     const profileCollection = database.collection("profileData");
-    const verifiedCollection = database.collection("verifiedData");
-    // Data collection server
-    app.get("/certificate", async (req, res) => {
+    const lecturesheet = database.collection("lecturesheet");
+    /*Library section*/ 
+    app.get("/library", async (req, res) => {
       const query = {};
-      const cursor = certificateCollection.find(query);
+      const cursor = library.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
-    app.get("/certificate/:id", async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
-      const result = await certificateCollection.findOne(query);
-      res.send(result);
-    });
-    // user or organization post data
-    app.get("/post", async (req, res) => {
-      const query = {};
-      const cursor = postCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.delete("/post", async (req, res) => {
+    app.delete("/library", async (req, res) => {
       const query = {};
 
-      const result = await postCollection.deleteMany(query);
+      const result = await library.deleteMany(query);
       res.send(result);
     });
-    app.delete("/post/:email", async (req, res) => {
+    app.delete("/library/:email", async (req, res) => {
       const query = req.body.userEmail;
       console.log(params);
-      const result = await postCollection.deleteMany(query);
+      const result = await library.deleteMany(query);
       res.send(result);
     });
-    app.get("/post/:id", async (req, res) => {
+    app.get("/library/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await postCollection.findOne(query);
+      const result = await library.findOne(query);
       res.send(result);
     });
-    app.delete("/post/:id", async (req, res) => {
+    app.delete("/library/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await postCollection.deleteOne(query);
+      const result = await library.deleteOne(query);
       res.send(result);
     });
-    app.post("/post", async (req, res) => {
+    app.post("/library", async (req, res) => {
       const user = req.body;
-      const result = await postCollection.insertOne(user);
+      const result = await library.insertOne(user);
       console.log(result);
       res.send(result);
     });
-    app.patch("/post/:id", async (req, res) => {
+    app.patch("/library/:id", async (req, res) => {
       const id = req.params.id;
       const filter = { _id: new ObjectId(id) };
       const information = req.body;
@@ -99,7 +88,136 @@ async function run() {
           session: information.session,
         },
       };
-      const result = await postCollection.updateOne(filter, updatePostData);
+      const result = await library.updateOne(filter, updatePostData);
+      res.send(result);
+    });
+
+    /*Lecturesheet section*/ 
+    app.get("/lecturesheet", async (req, res) => {
+      const query = {};
+      const cursor = lecturesheet.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.delete("/lecturesheet", async (req, res) => {
+      const query = {};
+
+      const result = await lecturesheet.deleteMany(query);
+      res.send(result);
+    });
+    app.delete("/lecturesheet/:email", async (req, res) => {
+      const query = req.body.userEmail;
+      console.log(params);
+      const result = await lecturesheet.deleteMany(query);
+      res.send(result);
+    });
+    app.get("/lecturesheet/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await lecturesheet.findOne(query);
+      res.send(result);
+    });
+    app.delete("/lecturesheet/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await lecturesheet.deleteOne(query);
+      res.send(result);
+    });
+    app.post("/lecturesheet", async (req, res) => {
+      const user = req.body;
+      const result = await lecturesheet.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
+    app.patch("/lecturesheet/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const information = req.body;
+      const updatePostData = {
+        $set: {
+          id: information.id,
+          uid: information.uid,
+          user: information.user,
+          userEmail: information.userEmail,
+          contact: information.contact,
+          image: information.image,
+          roll: information.roll,
+          registration: information.registration,
+          name: information.name,
+          email: information.email,
+          university: information.university,
+          country: information.country,
+          author: information.author,
+          journal: information.journal,
+          session: information.session,
+        },
+      };
+      const result = await lecturesheet.updateOne(filter, updatePostData);
+      res.send(result);
+    });
+
+
+    /*Question paper section*/ 
+    app.get("/questionpaper", async (req, res) => {
+      const query = {};
+      const cursor = questionpaper.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.delete("/questionpaper", async (req, res) => {
+      const query = {};
+
+      const result = await questionpaper.deleteMany(query);
+      res.send(result);
+    });
+    app.delete("/questionpaper/:email", async (req, res) => {
+      const query = req.body.userEmail;
+      console.log(params);
+      const result = await questionpaper.deleteMany(query);
+      res.send(result);
+    });
+    app.get("/questionpaper/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await questionpaper.findOne(query);
+      res.send(result);
+    });
+    app.delete("/questionpaper/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await questionpaper.deleteOne(query);
+      res.send(result);
+    });
+    app.post("/questionpaper", async (req, res) => {
+      const user = req.body;
+      const result = await questionpaper.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
+    app.patch("/questionpaper/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const information = req.body;
+      const updatePostData = {
+        $set: {
+          id: information.id,
+          uid: information.uid,
+          user: information.user,
+          userEmail: information.userEmail,
+          contact: information.contact,
+          image: information.image,
+          roll: information.roll,
+          registration: information.registration,
+          name: information.name,
+          email: information.email,
+          university: information.university,
+          country: information.country,
+          author: information.author,
+          journal: information.journal,
+          session: information.session,
+        },
+      };
+      const result = await questionpaper.updateOne(filter, updatePostData);
       res.send(result);
     });
 
@@ -179,5 +297,5 @@ async function run() {
 run().catch((err) => console.error(err));
 
 app.listen(port, () => {
-  console.log(`verify certificate server-2024 listening on port ${port}`);
+  console.log(`নতুন সহপাঠি সার্ভার চলমান পোর্ট= ${port}`);
 });
