@@ -4,14 +4,11 @@ const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 require("dotenv").config();
-
 app.use(cors());
 app.use(express.json());
-
 app.get("/", (req, res) => {
   res.send("নতুন সহপাঠি সার্ভার চলমান!");
 });
-
 const password = encodeURIComponent(`${process.env.DB_PASS}`);
 const user = encodeURIComponent(`${process.env.DB_USER}`);
 const uri = `mongodb+srv://${user}:${password}@sohopathicluster.kwnsrvo.mongodb.net/?retryWrites=true&w=majority&appName=SohopathiCluster`;
@@ -72,12 +69,12 @@ async function run() {
         $set: {
           id: information.id,
           uid: information.uid,
-          user: information.user,
+          userClass: information.userClass,
           bookName: information.bookName,
           version: information.version,
           viewLink: information.viewLink,         
           author: information.author,
-          session: information.session,
+          session: information.session
         },
       };
       const result = await library.updateOne(filter, updatePostData);
@@ -129,25 +126,17 @@ async function run() {
         $set: {
           id: information.id,
           uid: information.uid,
-          user: information.user,
-          userEmail: information.userEmail,
-          contact: information.contact,
-          image: information.image,
-          roll: information.roll,
-          registration: information.registration,
-          name: information.name,
-          email: information.email,
-          university: information.university,
-          country: information.country,
+          userClass: information.userClass,
+          bookName: information.bookName,
+          version: information.version,
+          viewLink: information.viewLink,
           author: information.author,
-          journal: information.journal,
           session: information.session,
         },
       };
       const result = await lecturesheet.updateOne(filter, updatePostData);
       res.send(result);
     });
-
 
     /*Question paper section*/ 
     app.get("/questionpaper", async (req, res) => {
@@ -194,18 +183,11 @@ async function run() {
         $set: {
           id: information.id,
           uid: information.uid,
-          user: information.user,
-          userEmail: information.userEmail,
-          contact: information.contact,
-          image: information.image,
-          roll: information.roll,
-          registration: information.registration,
-          name: information.name,
-          email: information.email,
-          university: information.university,
-          country: information.country,
+          userClass: information.userClass,
+          bookName: information.bookName,
+          version: information.version,
+          viewLink: information.viewLink,
           author: information.author,
-          journal: information.journal,
           session: information.session,
         },
       };
@@ -265,24 +247,10 @@ async function run() {
       );
       res.send(result);
     });
-
-    // User or organization match data with data house
-    app.get("/verified", async (req, res) => {
-      const query = {};
-      const cursor = verifiedCollection.find(query);
-      const result = await cursor.toArray();
-      res.send(result);
-    });
-    app.post("/verified", async (req, res) => {
-      const user = req.body;
-      const result = await verifiedCollection.insertOne(user);
-      console.log(result);
-      res.send(result);
-    });
   } finally {
     // await client.close();
     app.get("/*", async (req, res) => {
-      res.send("This collection is not create yet!");
+      res.send("সহপাঠি সার্ভারে আপনি যেটা খুজচ্ছেন, হয়তু সেটা ডেভেলপ হচ্ছে!");
     });
   }
 }
