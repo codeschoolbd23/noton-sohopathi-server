@@ -22,9 +22,10 @@ async function run() {
     const database = client.db("sohopathi");
     const library = database.collection("library");
     const questionpaper = database.collection("questionpaper");
-    const profileCollection = database.collection("profileData");
     const lecturesheet = database.collection("lecturesheet");
-    /*Library section*/ 
+    const performance = database.collection("performance");
+    const profileCollection = database.collection("profileData");
+    /*Library section*/
     app.get("/library", async (req, res) => {
       const query = {};
       const cursor = library.find(query);
@@ -33,7 +34,6 @@ async function run() {
     });
     app.delete("/library", async (req, res) => {
       const query = {};
-
       const result = await library.deleteMany(query);
       res.send(result);
     });
@@ -72,16 +72,16 @@ async function run() {
           userClass: information.userClass,
           bookName: information.bookName,
           version: information.version,
-          viewLink: information.viewLink,         
+          viewLink: information.viewLink,
           author: information.author,
-          session: information.session
+          session: information.session,
         },
       };
       const result = await library.updateOne(filter, updatePostData);
       res.send(result);
     });
 
-    /*Lecturesheet section*/ 
+    /*Lecturesheet section*/
     app.get("/lecturesheet", async (req, res) => {
       const query = {};
       const cursor = lecturesheet.find(query);
@@ -138,7 +138,7 @@ async function run() {
       res.send(result);
     });
 
-    /*Question paper section*/ 
+    /*Question paper section*/
     app.get("/questionpaper", async (req, res) => {
       const query = {};
       const cursor = questionpaper.find(query);
@@ -192,6 +192,63 @@ async function run() {
         },
       };
       const result = await questionpaper.updateOne(filter, updatePostData);
+      res.send(result);
+    });
+
+    /*performance section*/
+    app.get("/performance", async (req, res) => {
+      const query = {};
+      const cursor = performance.find(query);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+    app.delete("/performance", async (req, res) => {
+      const query = {};
+
+      const result = await performance.deleteMany(query);
+      res.send(result);
+    });
+    app.delete("/performance/:email", async (req, res) => {
+      const query = req.body.userEmail;
+      console.log(params);
+      const result = await performance.deleteMany(query);
+      res.send(result);
+    });
+    app.get("/performance/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await performance.findOne(query);
+      res.send(result);
+    });
+    app.delete("/performance/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await performance.deleteOne(query);
+      res.send(result);
+    });
+    app.post("/performance", async (req, res) => {
+      const user = req.body;
+      const result = await performance.insertOne(user);
+      console.log(result);
+      res.send(result);
+    });
+    app.patch("/performance/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const information = req.body;
+      const updatePostData = {
+        $set: {
+          id: information.id,
+          uid: information.uid,
+          userClass: information.userClass,
+          bookName: information.bookName,
+          version: information.version,
+          viewLink: information.viewLink,
+          author: information.author,
+          session: information.session,
+        },
+      };
+      const result = await performance.updateOne(filter, updatePostData);
       res.send(result);
     });
 
